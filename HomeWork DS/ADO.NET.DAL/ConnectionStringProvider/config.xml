@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <ConnectionStrings>
+        <Default>Host=localhost:5437;Username=postgres;Password=1234;Database=bbq_db;Search path=test_schema</Default>
+        <Test>asadsadasdasd</Test>
+    </ConnectionStrings>
+</configuration>

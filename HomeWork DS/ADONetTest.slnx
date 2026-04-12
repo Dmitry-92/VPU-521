@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/docker/">
+    <File Path=".env" />
+    <File Path="compose.withENV.yaml" />
+    <File Path="compose.yaml" />
+  </Folder>
+  <Folder Name="/MySQL/">
+    <File Path="create_db_MySQL.sql" />
+    <File Path="create_procedure_MySQL.sql" />
+    <File Path="fill_db.sql" />
+  </Folder>
+  <Folder Name="/other/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Folder Name="/PostgresSQL/">
+    <File Path="create_db.sql" />
+    <File Path="create_procedure.sql" />
+    <File Path="fill_db.sql" />
+  </Folder>
+  <Project Path="ADO.NET.DAL/ADO.NET.DAL.csproj" />
+  <Project Path="ADONetTest.Connected/ADONetTest.Connected.csproj" />
+  <Project Path="ConnectionStringTest/ConnectionStringTest.csproj" />
+  <Project Path="DapperTest/DapperTest.csproj" />
+</Solution>

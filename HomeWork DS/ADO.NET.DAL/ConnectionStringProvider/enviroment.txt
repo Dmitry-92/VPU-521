@@ -1,0 +1,24 @@
+$env:ConnectionStrings__Default = "Host=localhost:5437;Username=postgres;Password=1234;Database=bbq_db;Search path=test_schema"
+
+
+export - для macOS
+
+
+// глобальная переменная
+
+[Environment]::SetEnvironmentVariable(
+    "ConnectionStrings__Default",
+    "Host=localhost:5437;Username=postgres;Password=1234;Database=bbq_db;SearchPath=test_schema",
+    "Machine"
+)
+
+
+
+
+cd ../
+
+cd ./ConnectionStringTest
+
+dotnet run 
+
+
