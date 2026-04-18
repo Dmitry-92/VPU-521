@@ -17,4 +17,8 @@ CREATE TABLE table_products(
     user_id INTEGER NULL,
     FOREIGN KEY (user_id) REFERENCES table_users(id)
 )
-CREATE DATABASE blog_db;
+CREATE TABLE IF NOT EXISTS table_authors (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    bio TEXT
+);
