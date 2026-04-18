@@ -1,5 +1,5 @@
-﻿using ADO.NET.DAL;
-using ADO.NET.DAL.Models;
+﻿using Dapper;
+using Npgsql;
 
 namespace DapperTest;
 
@@ -7,109 +7,73 @@ class Program
 {
     static void Main(string[] args)
     {
-        var connection = DbConnectionFactory.GetPostgreSqlConnection();
+        Console.WriteLine("Dapper Test Application");
+        Console.WriteLine("======================");
         
-        var dapperContext = new DapperContextMy(connection);
+        // ПРИНУДИТЕЛЬНО правильная строка подключения
+        string connectionString = "Host=127.0.0.1;Port=5432;Database=blog_db;Username=postgres;Password=123";
         
-        // тест
-        //
-        // var allUsers = dapperContext.GetAllUsers();
-        // foreach (var user in allUsers)
-        // {
-        //     Console.WriteLine($"{user.Id} -- {user.Name} -- {user.IsDriver}");
-        // }
+        Console.WriteLine($"Подключение к: 127.0.0.1:5432");
+        Console.WriteLine();
         
-        // var allProducts = dapperContext.GetAllProducts();
-        // foreach (var product in allProducts)
-        // {
-        //     Console.WriteLine($"{product.Id} -- {product.Name} -- {product.Price} -- {product.Quantity} -- {product.UserName}");
-        // }
-        //
+        // Подготовка тестовых авторов
+        var authors = new List<Author>
+        {
+            new Author { Name = "Иван Петров", Bio = "Специалист по C#" },
+            new Author { Name = "Мария Сидорова", Bio = "Эксперт по базам данных" },
+            new Author { Name = "Алексей Иванов", Bio = "Full-stack разработчик" }
+        };
         
+        Console.WriteLine($"Подготовлено авторов для вставки: {authors.Count}");
+        Console.WriteLine();
         
-        // var thirdUser = dapperContext.GetUserById(3);
-        // var thirdUser2 = dapperContext.GetUserById(3);
-        //
-        //
-        // Console.WriteLine(thirdUser);
-        // Console.WriteLine(thirdUser2);
-        //
-        // Console.WriteLine(thirdUser==thirdUser2);
+        // Проверка подключения и вставка
+        try
+        {
+            // Сначала проверим подключение без вставки
+            using (var testConnection = new NpgsqlConnection(connectionString))
+            {
+                testConnection.Open();
+                Console.WriteLine("✅ Подключение к БД успешно!");
+                testConnection.Close();
+            }
+            
+            // Теперь выполняем массовую вставку
+            int insertedCount = BulkInsertAuthors(connectionString, authors);
+            Console.WriteLine($"✅ Успешно добавлено авторов: {insertedCount}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Ошибка: {ex.Message}");
+        }
         
-        // var allProducts = dapperContext.GetAllProducts();
-        // foreach (var product in allProducts)
-        // {
-        //     Console.WriteLine(product);
-        // }
-        //
-
-        // var newUser1 = new User()
-        // {
-        //     Name = "Dapper User 1",
-        //     IsDriver = false
-        // };
-        // var newUser2 = new User()
-        // {
-        //     Name = "Dapper User 2",
-        //     IsDriver = false
-        // };
-        // var newUser3 = new User()
-        // {
-        //     Name = "Dapper User 3",
-        //     IsDriver = false
-        // };
-        //
-        // List<User> listUser = [newUser1,newUser2,newUser3];
-        //
-        //
-        // var rows = dapperContext.InsertUsers(listUser);
-        //
-        // Console.WriteLine("Inserted Successfully" + rows);
-        //
-        //dapperContext.CopyWithAddingProduct("Шейка свиная", "Спинка свинная");
-        
-        //dapperContext.BuyProduct( "Спинка свинная",2500m);
-
-        // var prod1 = new Product()
-        // {
-        //     Name = "Product Transaction 1",
-        //     Price = 2500m,
-        //     Quantity = "12",
-        //     IsPurchased = false
-        // };
-        // var prod2 = new Product()
-        // {
-        //     Name = "Product Transaction 2",
-        //     Price = 2500m,
-        //     Quantity = "12",
-        //     IsPurchased = false
-        // };
-        // var prod3 = new Product()
-        // {
-        //     Name = "Product Transaction 3",
-        //     Price = -2500m,
-        //     Quantity = "12",
-        //     IsPurchased = false
-        // };
-        
-        // List<Product> products = [prod1,prod2,prod3];
-        //
-        // dapperContext.AddProductsTransaction(products);
-        //
-        // var prods = dapperContext.GetAllProducts();
-        //
-        // foreach (var product in prods) Console.WriteLine(product);
-
-        // dapperContext.MultipleDemo(3);
-        //
-        // int[] ids = [1, 4, 5, 6, 8];
-        // var users = dapperContext.GetUsersByIds(ids);
-        //
-        // foreach (var user in users) Console.WriteLine(user);
-
-
-        var products = dapperContext.GetProducts();
-        foreach (var product in products) Console.WriteLine(product);
-
+        Console.WriteLine();
+        Console.WriteLine("Нажмите Enter для выхода...");
+        Console.ReadLine();
     }
+    
+    public static int BulkInsertAuthors(string connectionString, IEnumerable<Author> authors)
+    {
+        if (authors == null || !authors.Any())
+            return 0;
+        
+        using (var connection = new NpgsqlConnection(connectionString))
+        {
+            connection.Open();
+            
+            string sql = @"
+                INSERT INTO table_authors (name, bio) 
+                VALUES (@Name, @Bio)";
+            
+            int affectedRows = connection.Execute(sql, authors);
+            return affectedRows;
+        }
+    }
+}
+
+public class Author
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Bio { get; set; }
 }

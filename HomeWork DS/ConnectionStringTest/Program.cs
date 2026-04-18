@@ -25,15 +25,13 @@ class Program
         var connectionString = ConnectionStringProvider.GetConnectionString();
         
         Console.WriteLine();
-        Console.WriteLine(nameof(connectionString) +  ":" + connectionString);
+        Console.WriteLine(nameof(connectionString) + ":" + connectionString);
         
         Console.ReadLine();
         
         connectionString = ConnectionStringProvider.GetConnectionString();
         
         Console.WriteLine();
-        Console.WriteLine(nameof(connectionString) +  "New :" + connectionString);
-
-
+        Console.WriteLine(nameof(connectionString) + "New:" + connectionString);
     }
 }

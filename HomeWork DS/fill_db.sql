@@ -1,4 +1,15 @@
-
+CREATE TABLE table_authors (
+                               id SERIAL PRIMARY KEY,
+                               name TEXT NOT NULL,
+                               bio TEXT
+);
+CREATE TABLE table_posts (
+                             id SERIAL PRIMARY KEY,
+                             title TEXT NOT NULL,
+                             content TEXT,
+                             author_id INTEGER REFERENCES
+                                 table_authors(id)
+);
 
 INSERT INTO table_users (name, is_driver) VALUES
 ('Даниил', TRUE),

@@ -17,3 +17,4 @@ CREATE TABLE table_products(
     user_id INTEGER NULL,
     FOREIGN KEY (user_id) REFERENCES table_users(id)
 )
+CREATE DATABASE blog_db;
